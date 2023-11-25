@@ -1,7 +1,13 @@
 const fetchJoke = document.getElementById('fetchJoke')
 const jokeList = document.getElementById('jokeList')
+const reiniciar = document.getElementById('Reiniciar')
 let jokes = []
 
+reiniciar.addEventListener('click', () => {
+    localStorage.clear()
+    jokeList.innerHTML = ``
+    jokes = []
+})
 fetchJoke.addEventListener('click', () => {
     fetch('https://api.chucknorris.io/jokes/random')
     .then((response) => {
@@ -11,13 +17,31 @@ fetchJoke.addEventListener('click', () => {
     })
     .then((data) => {
       jokes.push(data.value)
+      guardar()
+      pintar()
     })
     .catch (Error => {
         jokeList.innerHTML = ('Ha ocurrido un error 2')
     });
 
 })
-console.log(jokecounter)
+
+const guardar = () =>{
+    localStorage.setItem('jokes', JSON.stringify(jokes))
+}
+
+const pintar = () => {
+    let secondJokes = localStorage.getItem('jokes')
+    jokeList.innerHTML = ``
+    JSON.parse(secondJokes).forEach(joke => {
+        jokeList.innerHTML += `
+        <div class="joke">
+        <p>${joke}</p>
+        </div>
+        ` 
+    });
+}
+pintar()
 
 
 
